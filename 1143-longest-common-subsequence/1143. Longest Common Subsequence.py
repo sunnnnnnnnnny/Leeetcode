@@ -13,7 +13,7 @@ class Solution:
         def lcs(self, str1, str2, i, j, memo):
             if i<0 or j<0:
                 return 0
-            # why this always block the correct computation
+            # NOTE: python will allow neg idx, thus this always block the correct computation
             if memo[i][j] >= 0:
                 return memo[i][j]
             # print('i: j:, str:', i, j, str1[i], str2[j])
