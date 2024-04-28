@@ -21,10 +21,7 @@ class Solution:
         islandCnt = 0
         for i in range(maxX):
             for j in range(maxY):
-                if grid[i][j] == "1":
-                    # print((i,j))
-                    if (i, j) in self.visited:
-                        continue
+                if grid[i][j] == "1" and (i, j) not in self.visited:
                     dfs(self, i, j, grid, maxX, maxY)
                     islandCnt+=1
         return islandCnt
