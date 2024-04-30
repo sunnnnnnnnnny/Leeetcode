@@ -9,19 +9,37 @@ class Solution:
         for a,b in edges:
             adj_list[a].append(b)
             adj_list[b].append(a)
-        # seen to detect if cycle appeared
-        seen = set()
-        def dfs(node, parent):
-            if node in seen:
-                return;
-            seen.add(node)
-            for neighbor in adj_list[node]:
-                if neighbor == parent:
-                    continue
-                if neighbor in seen:
-                    return False
-                result = dfs(neighbor, node)
-                if not result: return False
-            return True
-        # checking if no cycle and all node can be reached
-        return dfs(0,-1) and len(seen) == n
+        queue = deque([0])
+        seen = set({0})
+        while queue:
+            levelCnt = len(queue)
+            for i in range(levelCnt):
+                now = queue.popleft()
+                for neighbor in adj_list[now]:
+                    if neighbor in seen:
+                        continue
+                    queue.append(neighbor)
+                    seen.add(neighbor)
+        return len(seen) == n
+
+        # Below checks both cycle and if fully-connected => O(N+E)
+        # yet if a graph with N-1 edges, even there is cycle we don't care
+        # b/c indicating it must have a node left unconnected
+        # so to use this, we could ignore the cycle check and focus on traversal
+        # then final checking if all node is linked => O(N+E) = O(N+N) = O(N)
+        # # seen to detect if cycle appeared
+        # seen = set()
+        # def dfs(node, parent):
+        #     if node in seen:
+        #         return;
+        #     seen.add(node)
+        #     for neighbor in adj_list[node]:
+        #         if neighbor == parent:
+        #             continue
+        #         if neighbor in seen:
+        #             return False
+        #         result = dfs(neighbor, node)
+        #         if not result: return False
+        #     return True
+        # # checking if no cycle and all node can be reached
+        # return dfs(0,-1) and len(seen) == n
