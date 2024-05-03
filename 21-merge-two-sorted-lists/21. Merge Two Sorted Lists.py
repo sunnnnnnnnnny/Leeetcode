@@ -19,13 +19,15 @@ class Solution:
                 list2 = list2.next
             parent.next = nextNode
             parent = parent.next
-        while list1:
-            parent.next = list1
-            parent = parent.next
-            list1 = list1.next
+        # only need to deal with the rest by linked it, no need go further traverse
+        parent.next = list1 if list1 is not None else list2
+        # while list1:
+        #     parent.next = list1
+        #     parent = parent.next
+        #     list1 = list1.next
         
-        while list2:
-            parent.next = list2
-            parent = parent.next
-            list2 = list2.next
+        # while list2:
+        #     parent.next = list2
+        #     parent = parent.next
+        #     list2 = list2.next
         return newHead.next
