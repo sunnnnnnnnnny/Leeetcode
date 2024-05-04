@@ -10,7 +10,8 @@ class Solution:
         # Spae: O(1)
         # 2. using min heap for each start node
         # pop the min heap element each time
-        # Time: O(N*K) Space:O(K) as we need to take all K beging node in queue
+        # Time: O(N*logK) Space:O(K) as we need to take all K beging node in queue
+        # as each time getting the num from heap cost logK
         kHeads = []
         for idx in range(len(lists)):
             head = lists[idx]
