@@ -10,6 +10,11 @@ class Solution:
         :type node: ListNode
         :rtype: void Do not return anything, modify node in-place instead.
         """
+        # correct is to remove the node of next one
+        # node->node.next.next
+        # time: O(1) space:O(1)
+        node.val = node.next.val
+        node.next = node.next.next
         # we are not removing the node of link
         # but by taking the child val and remove the last node linkage
         # TIME:O(N) as we go through all nodes
@@ -21,7 +26,7 @@ class Solution:
                 cur.val = nextVal
             else:
                 pre.next = None
-        replacePreVal(node, None)
+        # replacePreVal(node, None)
             
 
 
