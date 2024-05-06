@@ -19,13 +19,13 @@ class Solution:
         # but by taking the child val and remove the last node linkage
         # TIME:O(N) as we go through all nodes
         # space:O(N) need to record the next val
-        def replacePreVal(cur, pre):
-            if cur.next != None:
-                nextVal = cur.next.val
-                replacePreVal(cur.next, cur)
-                cur.val = nextVal
-            else:
-                pre.next = None
+        # def replacePreVal(cur, pre):
+        #     if cur.next != None:
+        #         nextVal = cur.next.val
+        #         replacePreVal(cur.next, cur)
+        #         cur.val = nextVal
+        #     else:
+        #         pre.next = None
         # replacePreVal(node, None)
             
 
