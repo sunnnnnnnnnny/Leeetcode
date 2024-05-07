@@ -9,23 +9,28 @@ class Solution:
         # and move the pointers when meeting one close, to verify the validtion
         # Time: O(N) Space:O(N)
         open = deque()
-        def getCloseBracket(char):
-            if char == '(' :
-                return ')'
-            elif char =='{' :
-                return '}'
-            elif char == '[':
-                return ']'
-            return ''
+        # def getCloseBracket(char):
+        #     if char == '(' :
+        #         return ')'
+        #     elif char =='{' :
+        #         return '}'
+        #     elif char == '[':
+        #         return ']'
+        #     return ''
+        bracketMap = {
+            '{':'}',
+            '(':')',
+            '[':']'
+        }
         for char in s:
-            if char == '(' or char =='{' or char == '[':
+            if char in ('(' , '{', '['):
                 open.append(char)
-            elif char == ')' or char == '}' or char == ']':
+            elif char in (')', '}', ']'):
                 if len(open)==0:
                     return False
                 lastOpen = open.pop()
-                shouldClose = getCloseBracket(lastOpen)
-                if shouldClose != char:
+                # shouldClose = getCloseBracket(lastOpen)
+                if bracketMap[lastOpen] != char:
                     return False
             else:
                 return False
