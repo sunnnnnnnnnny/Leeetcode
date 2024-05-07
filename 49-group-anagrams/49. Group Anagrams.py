@@ -2,10 +2,17 @@ class Solution:
     def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
         # by counting the anagram of each words as key
         # then group the words by key
-        # time: O(N) for counting the key
-        # space: O(N) record the keys, max length of the list length+word length
+        # time: O(NK) for counting the key, K is the max len of str
+        # space: O(NK) record the keys, max length of the list length+word length
         # 2. sort the words as the key, then group it
-        # time: O(Nlog(N)) Space:O(N)
+        # time: O(NKlog(K)) Space:O(NK)
+        # ans: DefaultDict[int, List[str]] = collections.defaultdict(list)
+        # for s in strs:
+        #     count[0]*26
+        #     for ch in s:
+        #         count[ord[(ch)-ord("a")]+=1
+        #     ans[tuple(count)].append(s)
+        # return ans.values()
         anaGroup = {}
         from collections import Counter
         for eachStr in strs:
@@ -13,9 +20,6 @@ class Solution:
             if key not in anaGroup:
                 anaGroup[key] = []
             anaGroup[key].append(eachStr)
-        ret = []
-        for key in anaGroup:
-            ret.append(anaGroup[key])
-        return ret
+        return anaGroup.values()
 
         
