@@ -14,15 +14,13 @@ class Solution:
         cnts = list(charCount.values())
         cnts.sort(reverse=True)
         ret = 0
-        keyPressAssign = 1
-        keyPressAssignLeft = 9
+        keyPressAssign = 0
+        # keyPressAssignLeft = 9
         for i in range(len(cnts)):
-            keyFreq = cnts[i]
-            ret += (keyFreq*keyPressAssign)
-            keyPressAssignLeft -= 1
-            if keyPressAssignLeft == 0:
+            if i%9 == 0:
                 keyPressAssign += 1
-                keyPressAssignLeft = 9
+            # keyFreq = cnts[i]
+            ret += (cnts[i]*keyPressAssign)
         return ret
 
 
