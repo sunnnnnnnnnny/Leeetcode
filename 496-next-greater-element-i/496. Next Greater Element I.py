@@ -14,7 +14,9 @@ class Solution:
                 rightGreater[numsHash[findGreater]] = nums2[idx]
             rightStack.append(nums2[idx])
         ret = [-1]*len(nums1)
+
         for idx in range(len(nums1)):
+            # since num1 is subset of num2, didn't check if it exists
             locNum2 = numsHash[nums1[idx]]
             ret[idx] = rightGreater[locNum2]
         return ret
