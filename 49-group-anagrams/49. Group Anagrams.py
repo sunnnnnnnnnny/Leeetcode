@@ -6,20 +6,21 @@ class Solution:
         # space: O(NK) record the keys, max length of the list length+word length
         # 2. sort the words as the key, then group it
         # time: O(NKlog(K)) Space:O(NK)
-        # ans: DefaultDict[int, List[str]] = collections.defaultdict(list)
-        # for s in strs:
-        #     count[0]*26
-        #     for ch in s:
-        #         count[ord[(ch)-ord("a")]+=1
-        #     ans[tuple(count)].append(s)
-        # return ans.values()
-        anaGroup = {}
-        from collections import Counter
-        for eachStr in strs:
-            key = ''.join(sorted(eachStr))
-            if key not in anaGroup:
-                anaGroup[key] = []
-            anaGroup[key].append(eachStr)
-        return anaGroup.values()
+        ans: DefaultDict[int, List[str]] = collections.defaultdict(list)
+        for s in strs:
+            count = [0]*26
+            for c in s:
+                count[ord(c)-ord('a')]+=1
+            ans[tuple(count)].append(s)
+        return ans.values()
+        # thie is sort thus time cost higher
+        # anaGroup = {}
+        # from collections import Counter
+        # for eachStr in strs:
+        #     key = ''.join(sorted(eachStr))
+        #     if key not in anaGroup:
+        #         anaGroup[key] = []
+        #     anaGroup[key].append(eachStr)
+        # return anaGroup.values()
 
         
