@@ -1,4 +1,7 @@
 class SparseVector:
+    # record the index to val for only non-zero val
+    # time:O(N) space:O(N)
+    # could also use list((idx,val)) to store the vector
     def __init__(self, nums: List[int]):
         self.idx2Val = {}
         for i in range(len(nums)):
@@ -10,15 +13,12 @@ class SparseVector:
         return self.idx2Val
 
     # Return the dotProduct of two sparse vectors
+    # time:O(min(L1, L2)*O(1) b/c using dictionary of python3
     def dotProduct(self, vec: 'SparseVector') -> int:
         ret = 0
         sec = vec.getVec()
-        # print(sec)
-        # print(self.idx2Val)
         mul = sec if len(sec.keys())<len(self.idx2Val.keys()) else self.idx2Val
         other = sec if len(sec.keys())>=len(self.idx2Val.keys()) else self.idx2Val
-        # print(mul)
-        # print(other)
         for key,val in mul.items():
             if key in other.keys():
                 ret += val*other[key]
