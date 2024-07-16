@@ -9,6 +9,7 @@ class Solution:
         ret = []
         for i in range(len(heights)-1, -1, -1):
             if heights[i]>hightestR:
-                ret = [i]+ret
+                # ret = [i]+ret
+                ret.append(i)
             hightestR = max(hightestR, heights[i])
-        return ret
+        return ret[::-1]
