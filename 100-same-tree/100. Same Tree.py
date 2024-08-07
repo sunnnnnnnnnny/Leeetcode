@@ -6,6 +6,24 @@
 #         self.right = right
 class Solution:
     def isSameTree(self, p: Optional[TreeNode], q: Optional[TreeNode]) -> bool:
+        # output the tree as pre-order traversal, with empty node as null string
+        # then compare the string, if not then no
+        def preOrder(root):
+            ret = ""
+            bfs = [root]
+            while bfs:
+                now = bfs.pop(0)
+                if now is None:
+                    ret += " null"
+                else:
+                    ret += " "
+                    ret+=str(now.val)
+                    bfs.append(now.left)
+                    bfs.append(now.right)
+            return ret
+        pStr = preOrder(p)
+        qStr = preOrder(q)
+        return pStr == qStr
         # traverse the tree in same order and compare
         # yet how to confirm if they are at the same level?
         # adding level form to confirm
