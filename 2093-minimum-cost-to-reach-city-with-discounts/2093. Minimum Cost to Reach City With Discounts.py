@@ -26,6 +26,9 @@ class Solution:
         while nextCost:
             nowCost, useDiscount, nowUpdateIdx = heapq.heappop(nextCost)
             # print(nowCost, useDiscount, nowUpdateIdx)
+            # the first time seeing target is the lowest cost
+            if nowUpdateIdx == n - 1:
+                return nowCost
             if visited[nowUpdateIdx][useDiscount] != -1:
                 continue
             visited[nowUpdateIdx][useDiscount] = 1
