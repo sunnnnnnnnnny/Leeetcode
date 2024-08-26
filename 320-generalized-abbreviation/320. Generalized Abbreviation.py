@@ -1,7 +1,11 @@
 class Solution:
     def generateAbbreviations(self, word: str) -> List[str]:
         # dp back tracking , every char can be abb or not
-        # time: O(2^len(word)) space = time
+        # time: O(2^len(word)*len(word)) space = O(N)
+        # the decision of add or not add for each char ->O(2^N)
+        # with the concat of string size (N) would take the extra O(N) time
+        # overall time: O(N*2^N)
+        # space:O(N) if we don't consider the output
         ret = []
         wordLen = len(word)
         def genAbb(nowIdx, abbCnt, lastAbbIdx, prefix):
