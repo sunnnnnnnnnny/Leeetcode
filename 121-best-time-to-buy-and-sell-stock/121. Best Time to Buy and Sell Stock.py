@@ -1,23 +1,18 @@
 class Solution:
     def maxProfit(self, prices: List[int]) -> int:
-        # easier understanding is to find the min Price upto current point
-        minPrice = prices[0]
-        maxProfit = 0
-        for end in range(len(prices)):
-            maxProfit = max(maxProfit, prices[end]-minPrice)
-            minPrice = min(minPrice, prices[end])
-        return maxProfit
-        # find the max diff from prev to current
-        # shrisk the start if the no profit ending on day end
-        # time: O(N) space:O(1)
-        # start = 0
-        # maxProfit = 0
-        # curProfit = 0
-        # for end in range(len(prices)):
-        #     curProfit = prices[end]-prices[start]
-        #     while curProfit<0:
-        #         start += 1
-        #         curProfit = prices[end]-prices[start]
-        #     maxProfit = max(maxProfit, curProfit)
-        # return maxProfit
+        # want to find the min of left max of right
+        # using prefix array to record the min n from left, 
+        # and max n from the right. 
+        # thus at each point we get the max gain at each location
+        # time: O(2n) space:O(n)
+        lMin = [0]*len(prices)
+        lMin[0] = prices[0]
+        for i in range(1, len(prices)):
+            lMin[i] = min(lMin[i-1], prices[i])
+        maxR = prices[-1]
+        maxGain = 0
+        for i in range(len(prices)-1, -1,-1):
+            maxR = max(maxR, prices[i])
+            maxGain = max(maxGain, maxR-lMin[i])
         
+        return maxGain
