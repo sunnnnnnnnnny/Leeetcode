@@ -1,16 +1,12 @@
 class Solution:
     def twoSum(self, nums: List[int], target: int) -> List[int]:
-        # with the intuitive of leftNum is target-num
-        # keep record of the appeared num then check if it exists
-        # if it does we get the ans
-        # time: O(N) traverse list and hash look up
-        # space: O(N) for the hashMap
+        # sort the array then use 2 pointers, time:O(nlogn+n), space:O(1)
+        # map to record the visted num, then everytime check if the remain is in the list
+        # creating map O(n), check map O(1), time: O(N), space: O(n)
         appeared = {}
         for i in range(len(nums)):
-            need = target-nums[i]
-            if need in appeared.keys():
-                return [i, appeared[need]]
+            left = target-nums[i]
+            if left in appeared.keys():
+                return [i, appeared[left]]
             appeared[nums[i]] = i
-        return [-1, -1]
-
-        
+        return []
