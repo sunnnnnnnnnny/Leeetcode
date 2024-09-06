@@ -5,58 +5,38 @@
 #         self.next = next
 class Solution:
     def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
-        # traverse the first time to get the length of list
-        # traverse the second time to remove the node
-        # time: O(2N) space:O(1)
-        # by using 2 pointers, when we get the fast pointer to end
-        # the slow pointer is at the middle, thus at most we traverse O(N+N/2)
-        if head is None:
-            return head
-        fast = head
-        slow = head
-        listLen = 1
-        slowIdx = 1
-        while fast:
-            if fast.next and fast.next.next:
+        # brute force way is going through all to get the length, 
+        # and will get the right index on second iteration , time:O(2N) space:O(1)
+        # 2 pointers, having the fast to end faster, then slow could be in the middle
+        # thus the time may be faster but still O(N)
+        # hashmap to record the index and directly remove once find the end
+        # time:O(N) space:O(N)
+        slow = fast = head
+        newHead = ListNode()
+        newHead.next = head
+        prev = newHead
+        lenCnt = 0
+        slowIdx= 0
+        while fast!=None:
+            if fast.next:
                 fast = fast.next.next
-                listLen+=2
+                lenCnt +=2
             else:
-                if fast.next:
-                    listLen+=1
-                break
-            if slow.next:
-                slow = slow.next
-                slowIdx+=1
-        
-        # print(listLen)
-        # print(slowIdx)
-        # the idx of remove should be len-(n-1)
-        removeNodeHead = listLen-n+1
-        # print(removeNodeHead)
-        newparent = ListNode()
-        newparent.next = head
-        if removeNodeHead> slowIdx:
-            parent = slow
-            while slow:
-                if removeNodeHead== slowIdx:
-                    parent.next = slow.next
-                    break
-                slowIdx += 1
-                parent = slow
-                slow = slow.next
-        else:
-            cur = head
-            idx = 1
-            parent = newparent
-            while cur:
-                if removeNodeHead == idx:
-                    parent.next = cur.next
-                    break
-                idx += 1
-                parent = cur
-                cur = cur.next
-        return newparent.next
-        
-
-
-                
+                fast = fast.next
+                lenCnt +=1
+            prev = slow
+            slow = slow.next
+            slowIdx+=1
+        removeIdx = lenCnt-n
+        if removeIdx<slowIdx:
+            slowIdx = 0
+            slow = head
+            prev = newHead
+        # print(lenCnt, slowIdx, removeIdx)
+        while slowIdx<=removeIdx:
+            if slowIdx==removeIdx:
+                prev.next = slow.next
+            prev = slow
+            slow = slow.next
+            slowIdx+=1
+        return newHead.next
