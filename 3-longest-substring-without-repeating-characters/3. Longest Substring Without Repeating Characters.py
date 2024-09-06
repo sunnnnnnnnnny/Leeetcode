@@ -1,39 +1,17 @@
 class Solution:
     def lengthOfLongestSubstring(self, s: str) -> int:
-        nonReap = {}
+        # to record the appeared character's prev location
+        # if the end character loc is no in the window, then it's legit
+        # otherwise we need to shrink the window
+        # time:O(N) space:O(N) if we do not limit the character to 26 eng ones
+        start = -1
+        appear = {}
         maxLen = 0
-        start = end = 0
-        while end<len(s):
-            if s[end] in nonReap.keys() and nonReap[s[end]]>=start:
-                start = nonReap[s[end]]+1
-            nonReap[s[end]] = end
-            # print(s[end], start, end)
-            maxLen = max(maxLen, end-start+1)
-            end += 1
+        for end in range(len(s)):
+            if s[end] in appear.keys() and appear[s[end]]>start:
+                start = appear[s[end]]
+            curLen = end-start
+            maxLen = max(maxLen, curLen)
+            appear[s[end]] = end
         return maxLen
-        # using dict to record the nonrepeat char with their idx
-        # the len of the set is the cnt
-        # Time: O(N) space:O(N) for dict
-        # another method is to use list of [0,26] as A-Z since it's fixed char
 
-        # nonRepeat = {}
-        # maxLen = 0
-        # startIdx = 0
-        # for i in range(len(s)):
-        #     if s[i] not in nonRepeat:
-        #         nonRepeat[s[i]] = i
-        #     else:
-        #         nowLen = i-startIdx
-        #         maxLen = max(maxLen, nowLen)
-        #         oriIdx = nonRepeat[s[i]]
-        #         for clearIdx in range(startIdx, oriIdx+1, 1):
-        #             del nonRepeat[s[clearIdx]]
-        #         startIdx = oriIdx+1
-        #         nonRepeat[s[i]] = i
-        #     # print('i: startIdx:', i, startIdx)
-        #     # print(nonRepeat)
-        # # print(nonRepeat)
-        # nowLen = len(s)-startIdx
-        # maxLen = max(maxLen, nowLen)
-        # return maxLen
-        
