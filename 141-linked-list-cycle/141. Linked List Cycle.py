@@ -6,24 +6,29 @@
 
 class Solution:
     def hasCycle(self, head: Optional[ListNode]) -> bool:
-        # brute force, keep a dictionary of all the nodes
-        # if any node appeared twice, then detected cycle
-        # time: O(N), space: O(N)
-        # 2 pointers of fast and slow, with fast being at the speed of 2
-        # if fast = slow, meaning there's a cycle
-        # Time: O(2N)=O(N) space:O(1)
-        if not head:
-            return False
-        fast = head.next
-        slow = head
-        while fast:
-            if fast == slow:
-                return True
-            if fast.next and fast.next.next:
-                fast = fast.next.next
+        # brute force is adding all the visited node in a hashmap, 
+        # once find existed node, meaning theres a cycle
+        # time:O(N) as hashSet check is O(1), space:O(N) for hashset
+        # better way is fast&slow poineter, 
+        # fast goes 2 steps, and slow goes 1, then at a certain point if slow==fast
+        # cycle detected, if fast == None, no cycle
+        # time:O(2N)=:(N) space:O(1)
+        slow = fast = head
+        while fast!=None:
+            fast = fast.next
+            if fast!=None:
+                fast = fast.next
             else:
                 break
-            if slow.next:
-                slow = slow.next
+            slow = slow.next
+            if fast == slow:
+                return True
         return False
-        
+        # hashSet = set()
+        # cur = head
+        # while cur!=None:
+        #     if cur in hashSet:
+        #         return True
+        #     hashSet.add(cur)
+        #     cur = cur.next
+        # return False
