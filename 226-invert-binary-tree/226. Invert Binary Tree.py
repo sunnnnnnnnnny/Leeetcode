@@ -6,17 +6,12 @@
 #         self.right = right
 class Solution:
     def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
-        # switch all the child node of left and right
-        # dfs or bfs traverse
-        # time: O(N) space:O(N)
-        def dfs(cur: Optional[TreeNode]):
-            if cur == None:
-                return cur
-            newLeft = dfs(cur.left)
-            newRight = dfs(cur.right) 
-            cur.left = newRight
-            cur.right = newLeft
-            return cur
-        newRoot = dfs(root)
-        return newRoot
-        
+        # flip the left and right child through dfs/bfs traversal
+        # time:O(V) size of the tree space:O(V) recursive
+        if root == None:
+            return None
+        tempLeft = self.invertTree(root.left)
+        root.left = self.invertTree(root.right)
+        root.right = tempLeft
+
+        return root
