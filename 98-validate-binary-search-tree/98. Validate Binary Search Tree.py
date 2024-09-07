@@ -6,24 +6,19 @@
 #         self.right = right
 class Solution:
     def isValidBST(self, root: Optional[TreeNode]) -> bool:
-        # using in order traverse to check if the condition is met
-        # dfs will cost: time O(N) space O(N) as stack
-        # or list the num in inorder traverse
-        # then check all numbers are going increasing
-        def checkBST(now: Optional[TreeNode], leftBond: Optional[TreeNode], rightBond: Optional[TreeNode]):
+        # dfs with checking the min and max num 
+        # time:O(N) space:O(N)
+        def checkValid(now, minN, maxN):
             if now == None:
                 return True
-            if leftBond != None:
-                if now.val<=leftBond.val:
-                    return False
-            if rightBond != None:
-                if now.val>=rightBond.val:
-                    return False
-            if not checkBST(now.left, leftBond, now):
+            # print(now.val, minN, maxN)
+            if now.val<=minN or now.val>=maxN:
                 return False
-            if not checkBST(now.right, now, rightBond):
+            # check left tree
+            if not checkValid(now.left, minN, min(maxN, now.val)):
+                return False
+            # check right
+            if not checkValid(now.right, max(minN, now.val), maxN):
                 return False
             return True
-        return checkBST(root, None, None)
-            
-        
+        return checkValid(root, -inf, inf)
