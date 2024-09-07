@@ -1,28 +1,25 @@
 class Solution:
     def countSubstrings(self, s: str) -> int:
-        # go through each idx as the middle and the even ones
-        # count each possible palindromic
-        # time: O(N^2)
-        # Space: O(1)
-        def countPalidronmic(l, r, rMax):
-            cnt = 0
-            while l>=0 and r<rMax:
-                if s[l] != s[r]:
-                    break
-                else:
-                    cnt+=1
-                    l-=1
-                    r+=1
-            return cnt
-        totalCnt = 0
-        rMax = len(s)
-        for idx in range(rMax):
-            oddCnt = countPalidronmic(idx-1, idx+1, rMax)
-            evenCnt = countPalidronmic(idx, idx+1, rMax)
-            totalCnt += oddCnt
-            totalCnt += evenCnt
-            # add it's self
-            totalCnt+=1
-        return totalCnt
+        # brute force time:O(n^2)
+        # to use the previous calculated result, at each char get the previous same char loc
+        # if the substring in between is alindronmic, then we find another
+        subPalindro = set()
+        prevCharLoc = {}
+        ret = 0
+        for i in range(len(s)):
+            if s[i] in prevCharLoc.keys():
+                for prevLoc in reversed(prevCharLoc[s[i]]):
+                    btwStr = s[prevLoc+1:i]
+                    # print(i, s[i], btwStr)
+                    if btwStr in subPalindro or btwStr == "":
+                        ret+=1
+                        subPalindro.add(s[prevLoc:i+1])
 
-        
+            else:
+                prevCharLoc[s[i]] = []
+                subPalindro.add(s[i])
+            ret+=1
+            prevCharLoc[s[i]].append(i)
+        # print(subPalindro)
+        return ret
+
