@@ -1,23 +1,17 @@
 class Solution:
     def eraseOverlapIntervals(self, intervals: List[List[int]]) -> int:
-        # sort by ending interval
-        # greedy picking the earlier ending one interval one
-        # the same question of maximum none overlapping interval
-        # time: O(NlogN+N)=> O(nlogn) sort+traversal
-        # space: O(N) b/c the sorting of Timesort in python
-        intervals.sort(key=lambda x:x[1])
-        # the first ending should be not overlapped with the first interval
-        # could also use -inf
-        # nowEnd = intervals[0][0]-1
-        nowEnd = -inf
+        # only consider the endtime, thus sort by earlier end time
+        # greedy getting the non overlapping one, cnt how many overlapped
+        # time: O(NlogN) space:O(N) because the sort
+        # sorted(intervals, key= lambda x:(x[0],x[1]))
+        intervals = sorted(intervals, key= lambda x:x[1])
+        # print(intervals)
+        lastTime = intervals[0]
         ret = 0
-        for interval in intervals:
-            if nowEnd<=interval[0]:
-                nowEnd = interval[1]
-                ret += 1
-            else:
-                nowEnd = min(interval[1], nowEnd)
-        left = len(intervals) - ret
-        return left
-
-        
+        for i in range(1, len(intervals)):
+            start, end = intervals[i]
+            if start<lastTime[1]:
+                ret+=1
+                continue
+            lastTime = intervals[i]
+        return ret
