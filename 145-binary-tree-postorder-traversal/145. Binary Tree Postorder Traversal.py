@@ -6,20 +6,15 @@
 #         self.right = right
 class Solution:
     def postorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
-        # postorder is left child, right child, parent
-        # by backtracking we can get the order
-        # time:O(N) the size of the tree
-        # space: O(N) dp recursive
+        # postorder is left->right->root
+        # with dfs, time;O(N) spce:O(N)
         ret = []
-        def postOrder(now):
-            if now is None:
-                return []
-            leftChild = postOrder(now.left)
-            rightChild = postOrder(now.right)
-            leftChild.extend(rightChild)
-            leftChild.append(now.val)
-            return leftChild
-        return postOrder(root)
-
-
-        
+        def dfsPost(now):
+            nonlocal ret
+            if now == None:
+                return
+            dfsPost(now.left)
+            dfsPost(now.right)
+            ret.append(now.val)
+        dfsPost(root)
+        return ret
