@@ -6,26 +6,22 @@
 #         self.right = right
 class Solution:
     def levelOrder(self, root: Optional[TreeNode]) -> List[List[int]]:
-        # do bfs traversal to print each level 
-        # with adding left to right into the queue
-        # time: O(N) space: O(N) 
-        # the space could be O(1) cause it's binary tree thus not that much node
-        # can be access at once
+        # bfs traversal the tree
+        # time: O(N) spcae:O(N)
+        bfsQ = []
         ret = []
-        traverse = deque()
-        traverse.append(root)
-        while traverse:
-            levelCnt = len(traverse)
-            levelList = []
-            for i in range(levelCnt):
-                now = traverse.popleft()
-                if now == None:
-                    continue
-                traverse.append(now.left)
-                traverse.append(now.right)
-                levelList.append(now.val)
-            if len(levelList)>0:
-                ret.append(levelList)
+        if root == None:
+            return ret
+        bfsQ.append(root)
+        while bfsQ:
+            levelS = len(bfsQ)
+            nowLevelRet = []
+            for i in range(levelS):
+                now = bfsQ.pop(0)
+                nowLevelRet.append(now.val)
+                if now.left != None:
+                    bfsQ.append(now.left)
+                if now.right != None:
+                    bfsQ.append(now.right)
+            ret.append(nowLevelRet)
         return ret
-
-        
