@@ -8,27 +8,40 @@ class Node:
 
 from typing import Optional
 class Solution:
-    # using DFS or BFS to go through the graph
-    # Both time cost=O(N+M) edge and node
-    # Using visited to record the relationship of ori node and new node
-
+    # use bfs as the cloning method, where we don't go through same node twice
+    # time:O(N) space:O(N)
+    
     def cloneGraph(self, node: Optional['Node']) -> Optional['Node']:
-        if not node:
-            return node
-        self.visited = {}
-        def cloneDfs(self, node):
-            if not node:
-                return node
-            if node in self.visited:
-                return self.visited[node]
+        if node == None:
+            return None
+        newNodes = {}
+        visited = set()
+        bfs = []
+        def cloneNode(ori):
+            if ori == None:
+                return None
+            newN = Node(val = ori.val, neighbors = ori.neighbors)
+            return newN
         
-            new_node = Node(node.val, [])
-            self.visited[node] = new_node
+        new = cloneNode(node)
+        newNodes[node] = new
+        bfs.append(new)
+        while bfs:
+            nowLevel = len(bfs)
+            for i in range(nowLevel):
+                now = bfs.pop(0)
+                if now in visited:
+                    continue
+                # print(now, new)
+                newNeighbor = []
+                for n in now.neighbors:
+                    if n not in newNodes.keys():
+                        newNeibhbor = cloneNode(n)
+                        newNodes[n] = newNeibhbor
+                        bfs.append(newNeibhbor)
+                    newNeighbor.append(newNodes[n])
+                now.neighbors = newNeighbor
+                visited.add(now)
+        
+        return newNodes[node]
 
-            for neighbor in node.neighbors:
-                new_node.neighbors.append(cloneDfs(self, neighbor))
-            return new_node
-        return cloneDfs(self,node)
-        
-
-        
