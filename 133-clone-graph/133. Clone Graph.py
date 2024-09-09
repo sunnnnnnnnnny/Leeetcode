@@ -15,33 +15,27 @@ class Solution:
         if node == None:
             return None
         newNodes = {}
-        visited = set()
         bfs = []
         def cloneNode(ori):
             if ori == None:
                 return None
-            newN = Node(val = ori.val, neighbors = ori.neighbors)
+            newN = Node(val = ori.val)
             return newN
-        
+        bfs.append(node)
         new = cloneNode(node)
         newNodes[node] = new
-        bfs.append(new)
         while bfs:
             nowLevel = len(bfs)
             for i in range(nowLevel):
                 now = bfs.pop(0)
-                if now in visited:
-                    continue
+                modify = newNodes[now]
                 # print(now, new)
-                newNeighbor = []
                 for n in now.neighbors:
                     if n not in newNodes.keys():
-                        newNeibhbor = cloneNode(n)
-                        newNodes[n] = newNeibhbor
-                        bfs.append(newNeibhbor)
-                    newNeighbor.append(newNodes[n])
-                now.neighbors = newNeighbor
-                visited.add(now)
+                        bfs.append(n)
+                        NewNeibhbor = cloneNode(n)
+                        newNodes[n] = NewNeibhbor
+                    modify.neighbors.append(newNodes[n])
         
         return newNodes[node]
 
