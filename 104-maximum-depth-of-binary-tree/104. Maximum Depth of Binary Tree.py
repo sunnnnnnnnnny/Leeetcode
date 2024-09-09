@@ -6,16 +6,13 @@
 #         self.right = right
 class Solution:
     def maxDepth(self, root: Optional[TreeNode]) -> int:
-        # dfs traverse the tree
-        # time: O(N) space: O(N) N is node size
-        if root == None:
-            return 0
-        def getLevel(cur: Optional[TreeNode]) -> int:
-            if cur == None:
-                return 0
-            curLevelLeft = getLevel(cur.left)
-            curLevelRight = getLevel(cur.right)
-            curLevel = max(curLevelLeft, curLevelRight)+1   
-            return curLevel 
-        return getLevel(root)
-         
+        # dfs from the root, assuming not an cycle graph since it's a Tree
+        # time:O(N) space:O(N)
+        # maxDepth = 0
+        def dfs(now, curDepth):
+            if now == None:
+                return curDepth
+            leftDepth = dfs(now.left, curDepth+1)
+            rightDepth = dfs(now.right, curDepth+1)
+            return max(leftDepth, rightDepth)
+        return dfs(root, 0)
