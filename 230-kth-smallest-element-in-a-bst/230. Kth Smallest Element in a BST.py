@@ -6,26 +6,21 @@
 #         self.right = right
 class Solution:
     def kthSmallest(self, root: Optional[TreeNode], k: int) -> int:
-        # do the in-order traversal and always dfs to left tree
-        # as bst is left<root<right
+        # BST the left is smaller
+        # preorder traversal to get the Kth smallest element, 
+        # by recording how many node it have discovered
         # time:O(N) space:O(N)
-        kthSmall = -1
-        def dfsBst(rootSmall:int, now: Optional[TreeNode]):
-            nonlocal kthSmall
+        kRet = 0
+        cntVisit = 0
+        def dfsPreOrder(now):
+            nonlocal k, kRet, cntVisit
             if now == None:
-                return rootSmall
-            if kthSmall >=0:
-                return rootSmall
-            leftSmall = dfsBst(rootSmall, now.left)
-            nowSmall = leftSmall+1
-            # print(now)
-            # print(leftSmall)
-            if nowSmall == k:
-                kthSmall = now.val
-                return nowSmall
-
-            rightSmall = dfsBst(nowSmall, now.right)
-            return rightSmall
-        dfsBst(0, root)
-        return kthSmall
-        
+                return
+            dfsPreOrder(now.left)
+            cntVisit+=1
+            if cntVisit == k:
+                kRet = now.val
+                return
+            dfsPreOrder(now.right)
+        dfsPreOrder(root)
+        return kRet
