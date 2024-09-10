@@ -1,42 +1,40 @@
 class WordDictionary:
+# need Trie strucutre, if the word is only consisting of alphbet character
+# could use # as indication of the end
 
     def __init__(self):
-        self.mtDict = {}
+        self.root = {}
 # the time for add is O(M) which is the key length as how far the tree goes
 # space is O(M) since we need to add at most the word length
     def addWord(self, word: str) -> None:
-        # use space to get the search
-        # always expand the word by having it as Trie
-        def addChild(self, nowDict, leftWord):
-            if len(leftWord) == 0:
-                # indicating the end
-                nowDict['#'] = {}
-                return
-            key = leftWord[0]
-            if key not in nowDict:
-                nowDict[key] = {}
-            return addChild(self, nowDict[key],leftWord[1:])
-        return addChild(self, self.mtDict,word)
+        now = self.root
+        for i in range(len(word)):
+            if word[i] not in now.keys():
+                now[word[i]] = {}
+            now = now[word[i]]
+        now["#"] = True
+        
 # time for seartch is O(M) b/c it must check all characters until the end to see if exists
 # space O(1) as traversing the tree without modification so no extra space
     def search(self, word: str) -> bool:
-        def checkChild(self, nowDict, leftWord):
-            if len(leftWord) == 0:
-                if '#' in nowDict.keys():
+        def searchRest(nowI, word, head):
+            if nowI>=len(word):
+                if '#' in head.keys():
                     return True
                 return False
-            key = leftWord[0]
-            # need to avoid the ending key
-            if key == '.':
-                for anyKey in nowDict.keys():
-                    if anyKey != '#' and checkChild(self, nowDict[anyKey], leftWord[1:]):
+            if word[nowI] == '.':
+                for key, val in head.items():
+                    if key == '#':
+                        continue
+                    if searchRest(nowI+1, word, head[key]):
                         return True
-            if key in nowDict:
-                return checkChild(self, nowDict[key], leftWord[1:])
-            return False
-        return checkChild(self, self.mtDict,word)
+            if word[nowI] not in head.keys():
+                return False
+            return searchRest(nowI+1, word, head[word[nowI]])
         
-
+        now = self.root
+        return searchRest(0, word, now)
+        
 
 # Your WordDictionary object will be instantiated and called as such:
 # obj = WordDictionary()
