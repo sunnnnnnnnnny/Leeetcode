@@ -1,17 +1,13 @@
 class Solution:
     def canAttendMeetings(self, intervals: List[List[int]]) -> bool:
-        # check if overlapped intervals
-        # sort by start time, then traverse all the interval
-        # by keep tracking of current end time
-        # Time: O(NlogN+N) sort + travese
-        # Space: O(N) sorting
-        if len(intervals) == 0:
-            return True
-        intervals.sort(key= lambda x:x[0])
-        nowEnd = intervals[0][0]-1
-        for start, end in intervals:
-            if start<nowEnd:
+        # sort the array by start time then check if overlappes
+        # time: O(nlogn+n) no extra space
+        # need to check what's the definition of overlap
+        # brute force, add all time slot as key, then check if exists :time:O(M) too long
+        intervals.sort(key = lambda x:x[0])
+        prev = []
+        for i in range(1, len(intervals)):
+            nowS, nowT = intervals[i]
+            if nowS>=intervals[i-1][0] and nowS<intervals[i-1][1]:
                 return False
-            nowEnd = end
         return True
-        
