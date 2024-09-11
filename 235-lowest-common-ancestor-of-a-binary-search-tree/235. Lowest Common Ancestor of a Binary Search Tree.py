@@ -7,22 +7,21 @@
 
 class Solution:
     def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
-        # according to the characteristic of BST
-        # if a number x is p<=x<=q then it shall be the LCA
-        # by DFS accessing to x, if now>q go left, if now<q go right
-        # time: O(N) space:O(N)
-        pval = min(p.val, q.val)
-        qval = max(p.val, q.val)
-        def findLCA(now: 'TreeNode'):
-            nonlocal pval, qval
+        # common ancestor would be min(p,q)<=a<=max(p,q)
+        # recursive to get the a by crateria
+        # does it gurantee the p and q in the tree? assume yes
+        # time:O(N) treesize, space:O(N)
+        if p == None or q == None:
+            return None
+        aSmall = min(p.val, q.val)
+        aBig = max(p.val, q.val)
+        def findA(now, small, big):
             if now == None:
                 return None
-            if now.val>=pval and now.val<=q.val:
+            if now.val>=small and now.val<=big:
                 return now
-            if now.val>qval:
-                return findLCA(now.left)
-            if now.val<pval:
-                return findLCA(now.right)
-            return now
-        return findLCA(root)
-        
+            if now.val<small:
+                # on the right side
+                return findA(now.right, small, big)
+            return findA(now.left, small, big)
+        return findA(root, aSmall, aBig)
