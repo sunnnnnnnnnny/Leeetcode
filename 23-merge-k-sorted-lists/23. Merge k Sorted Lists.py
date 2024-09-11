@@ -5,28 +5,22 @@
 #         self.next = next
 class Solution:
     def mergeKLists(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
-        # 1. brute force take 2 at a time to merge
-        # Time: O(N*K) assume ave len is N, total of K list
-        # Spae: O(1)
-        # 2. using min heap for each start node
-        # pop the min heap element each time
-        # Time: O(N*logK) Space:O(K) as we need to take all K beging node in queue
-        # as each time getting the num from heap cost logK
-        kHeads = []
+        # brute force way go through each list head everytime
+        # better is to use a min heap to pop out the min of all list head
+        # heap size is O(K), pop and insert takes O(logK)
+        # assume all item size O(N), time: O(NlogK) space :O(K) if not consider the return
+        minHeap = []
         for idx in range(len(lists)):
-            head = lists[idx]
-            if head:
-                kHeads.append((head.val, idx))
-        heapq.heapify(kHeads)
-        retHead = ListNode()
-        cur = retHead
-        while cur and kHeads:
-            nextNode = heapq.heappop(kHeads)
-            idx = nextNode[1]
-            cur.next = lists[idx]
-            if lists[idx].next:
-                heapq.heappush(kHeads, (lists[idx].next.val, idx))
-                lists[idx] = lists[idx].next
-            cur = cur.next
-        return retHead.next
+            if lists[idx]:
+                heapq.heappush(minHeap, (lists[idx].val, idx))
         
+        head = ListNode()
+        prev = head
+        while minHeap:
+            now = heapq.heappop(minHeap)
+            prev.next = lists[now[1]]
+            prev = prev.next
+            if lists[now[1]].next != None:
+                lists[now[1]] = lists[now[1]].next
+                heapq.heappush(minHeap, (lists[now[1]].val, now[1]))
+        return head.next
