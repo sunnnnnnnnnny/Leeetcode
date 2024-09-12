@@ -1,25 +1,18 @@
 class Solution:
     def coinChange(self, coins: List[int], amount: int) -> int:
-        # use array to record the min coin for each number until reach amounts
-        # the amount should be min(amount-coin(i))+1
-        # assume no dulicate coins and infinite coins
-        minCoins = [-1]*(amount+1)
-        minCoins[0] = 0
-        # getting the assending order is eaiser to check if we need the coin
-        coins.sort()
-        for i in range(1, amount+1, 1):
-            minCoinForI = -1
-            for coin in coins:
-                if coin>i:
-                    break
-                elif coin == i:
-                    minCoinForI = 1
-                    break
-                else:
-                    prevIdx = i-coin
-                    if prevIdx>=0 and minCoins[prevIdx]>0:
-                        minCoinForI = min(minCoinForI, minCoins[prevIdx]+1) if(minCoinForI>0) else minCoins[prevIdx]+1
-            minCoins[i] = minCoinForI
-        return minCoins[amount]
-
+        # dp[i] = min of all coins (dp[c]+1)
+        # time:O(amount*coins)
+        dp = [-1 for i in range(amount+1)]
+        dp[0] = 0
+        for c in coins:
+            if c < amount+1:
+                dp[c] = 1
+        for i in range(1, amount+1):
+            if dp[i] == -1:
+                continue
+            for c in coins:
+                nextC = i+c
+                if nextC<amount+1:
+                    dp[nextC] = dp[i]+1 if dp[nextC]<0 else min(dp[nextC],dp[i]+1)
         
+        return dp[amount]
