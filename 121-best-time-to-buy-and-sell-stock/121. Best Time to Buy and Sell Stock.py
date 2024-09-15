@@ -7,6 +7,8 @@ class Solution:
         allMax = 0
         for i in range(1, len(prices)):
             curProfit = prices[i]-nowMin
-            allMax = max(allMax, curProfit)
-            nowMin = min(nowMin, prices[i])
+            if curProfit>0:
+                allMax = max(allMax, curProfit)
+            else:
+                nowMin = min(nowMin, prices[i])
         return allMax
