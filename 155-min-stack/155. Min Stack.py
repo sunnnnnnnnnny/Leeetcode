@@ -1,40 +1,33 @@
 class MinStack:
+    # only retrieve min need constant time, using a val to record the min
+    # only after pop we need to get the min again ->O(n)
+    # push O(1) because only compare the min to pushed element
+    # top is ordered, thus is easy
 
     def __init__(self):
-        self.stack = []
-        self.minStack = []
+        self.arr = []
+        self.curMin = 0
 
     def push(self, val: int) -> None:
-        self.stack.append(val)
-        # having the min and cnt
-        if len(self.minStack) == 0:
-            self.minStack.append([val, 1])
+        if len(self.arr) == 0:
+            self.curMin = val
         else:
-            if self.minStack[-1][0]>val:
-                self.minStack.append([val, 1])
-            else:
-                self.minStack[-1][1]+=1
-
-
+            self.curMin = min(self.curMin, val)
+        self.arr.append(val)
+        
     def pop(self) -> None:
-        self.stack.pop()
-        self.minStack[-1][1]-=1
-        if self.minStack[-1][1] == 0:
-            self.minStack.pop()
+        if len(self.arr) > 0:
+            removeVal = self.arr.pop(-1)
+            if self.curMin == removeVal and len(self.arr)>0:
+                self.curMin = min(self.arr)
+        
 
     def top(self) -> int:
-       return self.stack[-1]
+        if len(self.arr) > 0:
+            return self.arr[-1]
+       
         
 
     def getMin(self) -> int:
-        # need O(1) time thus need to keep track of the min so far
-        return  self.minStack[-1][0]
-        
+        return self.curMin
 
-
-# Your MinStack object will be instantiated and called as such:
-# obj = MinStack()
-# obj.push(val)
-# obj.pop()
-# param_3 = obj.top()
-# param_4 = obj.getMin()
