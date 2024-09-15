@@ -1,25 +1,12 @@
 class Solution:
     def maxProfit(self, prices: List[int]) -> int:
-        # could record the min up to now, then get the maxGain
-        # time:O(n) space:O(1)
-        lMin = prices[0]
-        maxGain = 0
-        for p in prices:
-            lMin = min(lMin, p)
-            maxGain = max(maxGain, p-lMin)
-        # # want to find the min of left max of right
-        # # using prefix array to record the min n from left, 
-        # # and max n from the right. 
-        # # thus at each point we get the max gain at each location
-        # # time: O(2n) space:O(n)
-        # lMin = [0]*len(prices)
-        # lMin[0] = prices[0]
-        # for i in range(1, len(prices)):
-        #     lMin[i] = min(lMin[i-1], prices[i])
-        # maxR = prices[-1]
-        # maxGain = 0
-        # for i in range(len(prices)-1, -1,-1):
-        #     maxR = max(maxR, prices[i])
-        #     maxGain = max(maxGain, maxR-lMin[i])
-        
-        return maxGain
+        # keep track of the min from left
+        # moving to right we can always get the max profit of the current moment
+        # time:O(N) space:O(1) cause we only need to keep track of the current min
+        nowMin = prices[0]
+        allMax = 0
+        for i in range(1, len(prices)):
+            curProfit = prices[i]-nowMin
+            allMax = max(allMax, curProfit)
+            nowMin = min(nowMin, prices[i])
+        return allMax
