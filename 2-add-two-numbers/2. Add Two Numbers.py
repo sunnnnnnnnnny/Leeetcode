@@ -5,36 +5,41 @@
 #         self.next = next
 class Solution:
     def addTwoNumbers(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optional[ListNode]:
-        # take the carry
-        # time: O(N)
-        carryOne = 0
-        cur1 = l1
-        cur2 = l2
-        ret = ListNode()
-        ret.next = cur1
-        pre = ret
-        while cur1 != None and cur2!=None:
-            newVal = cur1.val+cur2.val+carryOne
-            carryOne = newVal//10
-            newVal = newVal%10
-            cur1.val = newVal
-            pre = cur1
-            cur1 = cur1.next
-            cur2 = cur2.next
-        if cur2!=None:
-            pre.next = cur2
-            cur1 = cur2
-        while carryOne>0 and cur1 != None:
-            newVal = cur1.val+carryOne
-            carryOne = newVal//10
-            newVal = newVal%10
-            cur1.val = newVal
-            pre = cur1
-            cur1 = cur1.next
-        if carryOne>0:
-            newNode = ListNode(carryOne)
-            pre.next = newNode
-        return ret.next
+        # go through the list together and add any carry one
+        if l1 == None or l2 == None:
+            return l1 if l1 is not None else l2
+        preHead = ListNode()
+        preHead.next = l1
+        carryOver = 0
+        prev = preHead
+        while l1 and l2:
+            nowVal = l1.val + l2.val + carryOver
+            if nowVal>=10:
+                carryOver = 1
+                nowVal = nowVal%10
+            else:
+                carryOver = 0
+            l1.val = nowVal
+            prev = l1
+            l1 = l1.next
+            l2 = l2.next
+        if l1 != None or l2 != None:
+            now = l1 if l1 is not None else l2
+            prev.next = now
+            while now and carryOver>0:
+                nowVal = now.val + carryOver
+                if nowVal>=10:
+                    carryOver = 1
+                    nowVal = nowVal%10
+                else:
+                    carryOver = 0
+                now.val = nowVal
+                prev = now
+                now = now.next
+        if carryOver>0:
+            endN = ListNode(val=1)
+            prev.next = endN
 
 
-        
+
+        return preHead.next
