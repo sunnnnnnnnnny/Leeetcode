@@ -1,23 +1,33 @@
 class Solution:
     def maxProduct(self, nums: List[int]) -> int:
-        # record the positive and negative product upto now
-        # reset when meet 0
-        # time: O(n) space:O(1)
-        pos = neg = 0
-        maxProd = nums[0]
-        maxN = nums[0]
-        for n in nums:
-            if n == 0:
-                pos = neg = 0
+        # dp[i] = dp[i-1]max*self, dp[i-1]min*self, self
+        # record the current min and max product till before
+        # time:O(N) space:O(1)
+        ret = nums[0]
+        prevPos = 0
+        prevNeg = 0
+        for i in range(0, len(nums)):
+            if nums[i]==0:
+                prevPos = prevNeg = 0
+                ret = max(0, ret)
+                continue
+            
+            newPos = prevPos*nums[i]
+            newNeg = prevNeg*nums[i]
+            if nums[i]>0:
+                curPos = max(newPos, nums[i])
+                ret = max(curPos, ret)
+                prevPos = curPos
+                prevNeg = newNeg
             else:
-                pos = n if pos==0 else pos*n
-                neg = 0 if neg == 0 else neg*n
-            if pos<neg:
-                temp = pos
-                pos = neg
-                neg = temp
-            maxProd = max(maxProd, pos)
-            maxN = max(maxN, n)
-        return maxProd if maxProd!=0 and maxProd>maxN else maxN
+                curNeg = min(newPos, nums[i])
+                if prevNeg!=0:
+                    ret = max(newNeg, ret)
+                else:
+                    ret = max(nums[i], ret)
+                prevPos = newNeg
+                prevNeg = curNeg
+        return ret
 
+                
 
