@@ -43,16 +43,16 @@
 
 class Solution:
     def depthSum(self, nestedList: List[NestedInteger]) -> int:
-        # assume it's always a valid list NestedInteger
-        # by keep record of current depth, we can go through the whole list for ret
-        # time:O(N) space:O(N) dfs or bfs
-        def getDepMul(now_list, depth):
-            ret = 0
-            for nestItem in now_list:
-                if nestItem.isInteger():
-                    ret += nestItem.getInteger()*depth
+        # dfs
+        # time:O(2N)= O(N) where N is the total number of integers in nestedList
+        # space:O(N) 
+        ret = 0
+        def calculateNestedN(level, nowNestList):
+            nonlocal ret
+            for ele in nowNestList:
+                if ele.isInteger():
+                    ret += ele.getInteger()*level
                 else:
-                    ret += getDepMul(nestItem.getList(), depth+1)
-            return ret
-        return getDepMul(nestedList, 1)
-        
+                    calculateNestedN(level+1,ele.getList())
+        calculateNestedN(1, nestedList)
+        return ret
