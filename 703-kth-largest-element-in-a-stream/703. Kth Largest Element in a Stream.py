@@ -1,33 +1,29 @@
 class KthLargest:
-    # using a minHeap of size k, of all the large number 
-    # assume the k <= len(nums)
-    # time: O(MlogK) space:O(K)
-    # overall time: O((M+N)⋅logk)
-    kSmall = []
-    K = -1
+# need to keep track of the top k largest with a minHeap
+# while the max size is K
+# time: O(NlogK) with ignoring any num smaller than K
+# space:O(K)
     def __init__(self, k: int, nums: List[int]):
-        self.K = k
-        self.kSmall = []
+        self.k = k
+        self.topK = []
         for n in nums:
-            if len(self.kSmall)<k:
-                heapq.heappush(self.kSmall, n)
+            if len(self.topK)<k:
+                heapq.heappush(self.topK, n)
             else:
-                if n > self.kSmall[0]:
-                    heapq.heappop(self.kSmall)
-                    heapq.heappush(self.kSmall, n)
+                topK = self.topK[0]
+                if topK<n:
+                    heapq.heappop(self.topK)
+                    heapq.heappush(self.topK, n)
 
-    # add will compare to the top of the maxHeap, if larger not dealing
-    # smaller then pop the top and add it, if total N add
-    # time: O(1) if larger O(NlogK) if pop
     def add(self, val: int) -> int:
-        if len(self.kSmall)<self.K:
-            heapq.heappush(self.kSmall, val)
+        if len(self.topK)<self.k:
+            heapq.heappush(self.topK, val)
         else:
-            if val > self.kSmall[0]:
-                heapq.heappop(self.kSmall)
-                heapq.heappush(self.kSmall, val)
-        # print(val, len(self.kSmall))
-        return self.kSmall[0]
+            topK = self.topK[0]
+            if topK<val:
+                heapq.heappop(self.topK)
+                heapq.heappush(self.topK, val)
+        return self.topK[0]
         
 
 
