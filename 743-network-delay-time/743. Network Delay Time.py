@@ -1,28 +1,54 @@
 class Solution:
     def networkDelayTime(self, times: List[List[int]], n: int, k: int) -> int:
-#         take as original diaskjra
-#   the k is the source to all other dist
-#  time:O(E*VlogV) space:O(V)
-        visited = [-1]*(n+1)
-        link = {}
-        for edge in times:
-            s, t, w = edge
-            if s not in link.keys():
-                link[s] = []
-            link[s].append((t,w))
-        nextV = [(0,k)]
-        maxDest = 0
-        while nextV:
-            nowCost, nowIdx = heapq.heappop(nextV)
-            if visited[nowIdx]!=-1:
+        # relation = [[] for i in range(n+1)]
+        # costArr = [-1 for i in range(n+1)]
+        costArr = [-1]*(n+1)
+        relationDict = {}
+        for t in times:
+            s,d,cost = t
+            if s not in relationDict.keys():
+                relationDict[s] = []
+            relationDict[s].append((d,cost))
+            # relation[s].append((d,cost))
+
+        # disikija with getting the shorest
+        pq = []
+        heapq.heappush(pq, (0,k))
+        maxDist = 0
+        while pq:
+            cost, now = heapq.heappop(pq)
+            if costArr[now]>-1:
                 continue
-            visited[nowIdx]=1
-            maxDest = max(maxDest, nowCost)
-            if nowIdx in link.keys():
-                for neighbor in link[nowIdx]:
-                    heapq.heappush(nextV, (nowCost+neighbor[1], neighbor[0]))
-        for i in range(1,n+1):
-            if visited[i] == -1:
-                return -1
-        return maxDest
+            costArr[now] = cost
+            maxDist = max(maxDist, cost)
+            if now in relationDict.keys():
+                for i in relationDict[now]:
+                    nextI, nextT = i
+                    if costArr[nextI]>-1 and costArr[nextI]>cost+nextT:
+                        continue
+                    heapq.heappush(pq, (cost+nextT,nextI))
         
+        for i in range(1, n+1):
+            if costArr[i]==-1:
+                return -1
+        return maxDist
+
+        # dfs with only traversing the time needed is less than current stored
+        # def dfs(now, needTime):
+        #     nonlocal costArr,relation
+        #     # print(now, costArr[now], needTime)
+        #     if costArr[now] > -1 and costArr[now]<needTime:
+        #         return
+        #     costArr[now]=needTime
+        #     for d,c in relation[now]:
+        #         dfs(d,needTime+c)
+        #     return
+        # dfs(k,0)
+        # ret = -1
+        # for i in range(1,n+1):
+        #     if costArr[i] == -1:
+        #         return -1
+        #     if ret == -1 or ret<costArr[i]:
+        #         ret = costArr[i]
+        # return ret
+
