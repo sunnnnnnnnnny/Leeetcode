@@ -6,37 +6,30 @@
 #         self.right = right
 class Solution:
     def verticalOrder(self, root: Optional[TreeNode]) -> List[List[int]]:
-        # bfs with each layer at different index, odd, even
-        # time:O(N) space:O(N) for queue
+        # bfs with preorder traversal, and keep track of the vertical cnt
+        # time:O(2N) space:O(N)
         if root == None:
             return []
-        bfsQueue = []
-        bfsQueue.append((root, 0))
-        ret = [[]]
-        startX = 0
-        while bfsQueue:
-            levelCnt = len(bfsQueue)
+        row2Keys = {}
+        minRow = maxRow = 0
+        # bfs
+        checkNext = [(root, 0)]
+        while checkNext:
+            levelCnt = len(checkNext)
             for i in range(levelCnt):
-                cur = bfsQueue.pop(0)
-                nodeX = cur[1]
-                # add one array ret
-                actualIdx = nodeX-startX
-                if actualIdx<0:
-                    newArr = [cur[0].val]
-                    ret.insert(0, newArr)
-                    startX = nodeX
-                elif actualIdx>=len(ret):
-                    newArr = [cur[0].val]
-                    ret.append(newArr)
-                else:
-                    ret[actualIdx].append(cur[0].val)
-                if cur[0].left != None:
-                    bfsQueue.append((cur[0].left, nodeX-1))
-                if cur[0].right != None:
-                    bfsQueue.append((cur[0].right, nodeX+1))
-
+                now, row  = checkNext.pop(0)
+                if now.left!=None:
+                    checkNext.append((now.left,row-1))
+                if now.right!=None:
+                    checkNext.append((now.right,row+1))
+                if row not in row2Keys.keys():
+                    row2Keys[row] = []
+                row2Keys[row].append(now.val)
+                minRow = min(minRow, row)
+                maxRow = max(maxRow, row)
+        # get back the ret by sorted row
+        ret = []
+        for i in range(minRow, maxRow+1):
+            ret.append(row2Keys[i])
         return ret
-
-
-
         
