@@ -18,13 +18,13 @@ class Solution:
                 if dist[nowi][nowj] != -1:
                     continue
                 dist[nowi][nowj] = level
-                if nowi-1>=0 and mat[nowi-1][nowj]==1:
+                if nowi-1>=0 and mat[nowi-1][nowj]==1 and dist[nowi-1][nowj]==-1:
                     locQ.append((nowi-1,nowj))
-                if nowi+1<n and mat[nowi+1][nowj]==1:
+                if nowi+1<n and mat[nowi+1][nowj]==1 and dist[nowi+1][nowj]==-1:
                     locQ.append((nowi+1,nowj))
-                if nowj-1>=0 and mat[nowi][nowj-1]==1:
+                if nowj-1>=0 and mat[nowi][nowj-1]==1 and dist[nowi][nowj-1]==-1:
                     locQ.append((nowi,nowj-1))
-                if nowj+1<m and mat[nowi][nowj+1]==1:
+                if nowj+1<m and mat[nowi][nowj+1]==1 and dist[nowi][nowj+1]==-1:
                     locQ.append((nowi,nowj+1))
             level += 1
         return dist
