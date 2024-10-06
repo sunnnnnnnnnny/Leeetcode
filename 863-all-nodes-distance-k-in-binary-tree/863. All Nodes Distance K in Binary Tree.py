@@ -39,6 +39,8 @@ class Solution:
                     if c not in visited:
                         bfsQ.append(c)
             level+=1
+            if level>k:
+                break
 
         return ret
                 
