@@ -16,8 +16,9 @@ class Solution:
             nonlocal n, taskSort, waitingTask, tasks
             while i<n and taskSort[i][0]<=timeNow:
                 oriIdx = taskSort[i][1]
-                insertIdx = bisect.bisect_right(waitingTask, (tasks[oriIdx][1],oriIdx))
-                waitingTask.insert(insertIdx,(tasks[oriIdx][1],oriIdx))
+                heapq.heappush(waitingTask, (tasks[oriIdx][1],oriIdx))
+                # insertIdx = bisect.bisect_right(waitingTask, (tasks[oriIdx][1],oriIdx))
+                # waitingTask.insert(insertIdx,(tasks[oriIdx][1],oriIdx))
                 i+=1
             return i
         
@@ -27,7 +28,8 @@ class Solution:
                 # should jump to the next possible time task
                 timeNow=taskSort[taskIdx][0]
                 continue
-            performTask = waitingTask.pop(0)
+            # performTask = waitingTask.pop(0)
+            performTask = heapq.heappop(waitingTask)
             timeNow += performTask[0]
             ret.append(performTask[1])
         return ret
