@@ -6,21 +6,19 @@
 #         self.right = right
 class Solution:
     def maxPathSum(self, root: Optional[TreeNode]) -> int:
-        # assume the path needs to be link by leaf node?
-        # then with returning the maxPath of left and righ child
-        # we can get the max of any node that's connected
-        # with postorder traversal time:O(N) space:O(N)
-        maxPathCost = -inf
-        def dfsCost(now):
-            nonlocal maxPathCost
+        # dfs getting the left&right sum and return the max path child
+        maxPathSum = -inf
+        def dfsSum(now):
+            nonlocal maxPathSum
             if now == None:
                 return 0
-            leftChildCost = dfsCost(now.left)
-            rightChildCost = dfsCost(now.right)
-            totalCost = now.val+leftChildCost+rightChildCost
-            maxNowCost = max(totalCost, now.val)
-            maxNowCost = max(maxNowCost, max(leftChildCost,rightChildCost)+now.val)
-            maxPathCost = max(maxPathCost, maxNowCost)
-            return max(0, max(leftChildCost,rightChildCost))+now.val
-        dfsCost(root)
-        return maxPathCost
+            leftPathSum = dfsSum(now.left)
+            rightPathSum = dfsSum(now.right)
+            overNowPath = leftPathSum+now.val+rightPathSum
+            maxPathSum = max(maxPathSum, overNowPath)
+            includeNowPath = max(leftPathSum, rightPathSum)+now.val
+            includeNowPath = max(includeNowPath, now.val)
+            maxPathSum = max(maxPathSum, includeNowPath)
+            return includeNowPath
+        dfsSum(root)
+        return maxPathSum
