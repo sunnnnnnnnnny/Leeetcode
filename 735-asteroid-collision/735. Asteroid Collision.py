@@ -1,29 +1,27 @@
 class Solution:
     def asteroidCollision(self, asteroids: List[int]) -> List[int]:
-        # since positive move right and negative move left
-        # only when a pair of pos, neg appears will it meet
-        # we can mimic is by using a queue to record the elements going right
-        # and once meeting the going left elements we can start make collision
-        # until it explods
-        # time: O(N) space:O(N)
-        movingRight = []
+        # pos to right neg to left
+        # only pos_i<neg_j will collision, ignore the negative on left
+        # using stack to mimic the asteroid going right
+        # time:O(N) space:O(N)
+        astStack = []
         ret = []
         for ast in asteroids:
-            if ast<0:
-                explod = False
-                while movingRight:
-                    meets = movingRight[-1]
-                    if meets<=-ast:
-                        movingRight.pop()
-                        if meets == -ast:
-                            explod = True
+            if ast>0:
+                astStack.append(ast)
+            else:
+                remain = True
+                while astStack:
+                    hit = astStack[-1]
+                    if -ast>=hit:
+                        astStack.pop()
+                        if -ast == hit:
+                            remain = False
                             break
                     else:
-                        explod = True
+                        remain = False
                         break
-                if not explod:
+                if remain:
                     ret.append(ast)
-            else:
-                movingRight.append(ast)
-        ret.extend(movingRight)
+        ret.extend(astStack)
         return ret
