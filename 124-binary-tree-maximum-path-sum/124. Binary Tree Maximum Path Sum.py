@@ -6,19 +6,35 @@
 #         self.right = right
 class Solution:
     def maxPathSum(self, root: Optional[TreeNode]) -> int:
-        # dfs getting the left&right sum and return the max path child
-        maxPathSum = -inf
-        def dfsSum(now):
-            nonlocal maxPathSum
+        # traverse the whole tree and get the result of left child sum, right child path, sum of left+right+self
+        # return the max(self, self+max(left, right))
+        # time:O(N) space:O(N)
+        if root == None:
+            return 0
+        
+        maxPath = root.val
+        if root.left!= None:
+            maxPath+=root.left.val
+        elif root.right!= None:
+            maxPath+=root.right.val
+        def postOrder(now):
+            nonlocal maxPath
             if now == None:
                 return 0
-            leftPathSum = dfsSum(now.left)
-            rightPathSum = dfsSum(now.right)
-            overNowPath = leftPathSum+now.val+rightPathSum
-            maxPathSum = max(maxPathSum, overNowPath)
-            includeNowPath = max(leftPathSum, rightPathSum)+now.val
-            includeNowPath = max(includeNowPath, now.val)
-            maxPathSum = max(maxPathSum, includeNowPath)
-            return includeNowPath
-        dfsSum(root)
-        return maxPathSum
+            leftPath = postOrder(now.left)
+            rightPath = postOrder(now.right)
+            childMax = max(leftPath, rightPath)
+            curMax = max(leftPath+rightPath, childMax)
+            # need path to be consider but may have different idea?
+            # if now.left != None or now.right != None:
+            #     maxPath = max(maxPath, curMax+now.val)
+            # print(now.val, leftPath, rightPath,curMax )
+            # if self can be consider
+            curMax = max(0, curMax)
+            maxPath = max(maxPath, curMax+now.val)
+            childMax = max(childMax+now.val, now.val)
+            return childMax
+        postOrder(root)
+        return maxPath
+
+        
