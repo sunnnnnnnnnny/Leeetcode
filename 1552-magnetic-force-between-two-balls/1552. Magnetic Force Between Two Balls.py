@@ -2,7 +2,10 @@ class Solution:
     def maxDistance(self, position: List[int], m: int) -> int:
         # similar to koko banana, use binary search for the space
         # range from 1 to lastPos-firstPos//m
-        # time:O(logY) space:O(1)
+        # where Y = lastPos-firstPos//m
+        # sorting and checking the fit take O(N) with binary search logY
+        # sorting takes the space of O(N) in python
+        # time:O(NlogY+NlogN)=O(NlogY*N) space:O(N)
         position.sort()
         def canFit(dist):
             nonlocal position, m
