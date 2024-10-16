@@ -2,7 +2,8 @@ class Solution:
     def fullJustify(self, words: List[str], maxWidth: int) -> List[str]:
         # pack greedy thus try to have as many word as possible
         # count the words of each line, and have the space distruibute
-        # mimic the greedy time:O(N) space:O(1)
+        # k is the avg size of words, m is the maxwidth
+        # mimic the greedy time:O(N*K) space:O(m)
         ret= []
         i=0
         while i<=len(words)-1:
