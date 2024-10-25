@@ -1,16 +1,20 @@
 class Solution:
     def rob(self, nums: List[int]) -> int:
-        # dp[i] = max(dp[i-2]+n, dp[i-1])
-        # time:O(n) spcaeLO(n) bottomup
-        if len(nums) == 0:
-            return 0
-        dp = [[0,0] for i in range(len(nums))]
-        dp[0] = nums[0]
-        houseN = len(nums)
-        if houseN>=2:
-            dp[1] = max(nums[1],nums[0])
-        for house in range(2, len(nums)):
-            # max of previous available node
-            dp[house] = max(dp[house-1],dp[house-2]+nums[house])
-        print(dp)
-        return dp[-1]
+        n = len(nums)
+        if n<2:
+            return max(nums)
+        # dp = [0]*n
+        # dp[0] = nums[0]
+        # dp[1] = max(nums[0], nums[1])
+        # for i in range(2, n):
+        #     dp[i] = max(nums[i]+dp[i-2], dp[i-1])
+        # return dp[-1]
+        prev0 = nums[0]
+        prev1 = max(nums[0], nums[1])
+        for i in range(2, n):
+            now = max(nums[i]+prev0, prev1)
+            prev0 = prev1
+            prev1 = now
+        return prev1
+
+        
