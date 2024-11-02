@@ -11,18 +11,18 @@ class BoundedBlockingQueue(object):
     def enqueue(self, element: int) -> None:
         self.push.acquire()
         self.Q.append(element)
-        if self.pull.locked():
-            self.pull.release()
         if len(self.Q)<self.cap:
             self.push.release()
+        if self.pull.locked():
+            self.pull.release()
 
     def dequeue(self) -> int:
         self.pull.acquire()
         ret = self.Q.pop(0)
-        if self.push.locked():
-            self.push.release()
         if len(self.Q)>0:
             self.pull.release()
+        if self.push.locked():
+            self.push.release()
         return ret
 
     def size(self) -> int:
