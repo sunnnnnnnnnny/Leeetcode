@@ -1,29 +1,31 @@
 import threading
 class BoundedBlockingQueue(object):
-
+# 2 ways , with 2 locks and record the capacity
+# another way is to use semaphore of size capacity with one read lock
     def __init__(self, capacity: int):
-        self.cap = capacity
-        self.push = threading.Lock()
-        self.pull = threading.Lock()
         self.Q = []
-        self.pull.acquire()
+        self.cap = capacity
+        self.wLock = threading.Lock()
+        self.rLock = threading.Lock()
+        self.rLock.acquire()
 
     def enqueue(self, element: int) -> None:
-        self.push.acquire()
+        self.wLock.acquire()
         self.Q.append(element)
         if len(self.Q)<self.cap:
-            self.push.release()
-        if self.pull.locked():
-            self.pull.release()
+            self.wLock.release()
+        if self.rLock.locked():
+            self.rLock.release()
 
     def dequeue(self) -> int:
-        self.pull.acquire()
+        self.rLock.acquire()
         ret = self.Q.pop(0)
         if len(self.Q)>0:
-            self.pull.release()
-        if self.push.locked():
-            self.push.release()
+            self.rLock.release()
+        if self.wLock.locked():
+            self.wLock.release()
         return ret
 
     def size(self) -> int:
         return len(self.Q)
+        
