@@ -33,30 +33,42 @@ class Codec:
         :type data: str
         :rtype: TreeNode
         """
-        def preOrderBack(nowStr, idx):
-            if idx >= len(nowStr):
-                return None, idx
-            startIdx = idx
-            while idx<len(nowStr):
-                if nowStr[idx] == ',':
-                    break
-                idx+=1
-            if idx>=len(nowStr):
-                idx = len(nowStr)
-            nowNodeStr = nowStr[startIdx:idx]
-            # print(nowNodeStr, startIdx, idx)
-            if len(nowNodeStr) == 0 or nowNodeStr == 'None':
-                return None, idx+1
-            
-            now = TreeNode(int(nowNodeStr))
-            nowLeft, idx = preOrderBack(nowStr, idx+1)
-            now.left = nowLeft
-            nowRight, idx = preOrderBack(nowStr, idx)
-            now.right = nowRight
-            return now, idx
-        
-        root, endIdx = preOrderBack(data,0)
+        def rPreOrderBack(nodeL):
+            if nodeL[0] == 'None':
+                nodeL.pop(0)
+                return None
+            now = TreeNode(nodeL[0])
+            nodeL.pop(0)
+            now.left = rPreOrderBack(nodeL)
+            now.right = rPreOrderBack(nodeL)
+            return now
+        nodeL = data.split(',')
+        root = rPreOrderBack(nodeL)
         return root
+        # def preOrderBack(nowStr, idx):
+        #     if idx >= len(nowStr):
+        #         return None, idx
+        #     startIdx = idx
+        #     while idx<len(nowStr):
+        #         if nowStr[idx] == ',':
+        #             break
+        #         idx+=1
+        #     if idx>=len(nowStr):
+        #         idx = len(nowStr)
+        #     nowNodeStr = nowStr[startIdx:idx]
+        #     # print(nowNodeStr, startIdx, idx)
+        #     if len(nowNodeStr) == 0 or nowNodeStr == 'None':
+        #         return None, idx+1
+            
+        #     now = TreeNode(int(nowNodeStr))
+        #     nowLeft, idx = preOrderBack(nowStr, idx+1)
+        #     now.left = nowLeft
+        #     nowRight, idx = preOrderBack(nowStr, idx)
+        #     now.right = nowRight
+        #     return now, idx
+        
+        # root, endIdx = preOrderBack(data,0)
+        # return root
         
 
 # Your Codec object will be instantiated and called as such:
