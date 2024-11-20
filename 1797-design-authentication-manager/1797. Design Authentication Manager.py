@@ -5,20 +5,19 @@ class AuthenticationManager:
         # keep minHeap for timestamp to tokeID for easier count none expire
         # time:O(1) for generate, renew/count O(nlogn)
         # using orderedDict to keep the expT as increasing, so time:O(N)
+        # space:O(N)
         self.ttl = timeToLive
-        self.toke2Exp = {}
-        self.ts2TokeMinHeap = []
+        self.toke2Exp = OrderedDict()
 
     def generate(self, tokenId: str, currentTime: int) -> None:
         expT = currentTime+self.ttl
         self.toke2Exp[tokenId] = expT
-        heapq.heappush(self.ts2TokeMinHeap, [expT, tokenId])
+
     def clearExp(self, currentTime)->None:
-        while self.ts2TokeMinHeap:
-            if self.ts2TokeMinHeap[0][0]<=currentTime:
-                expTime, expToken = heapq.heappop(self.ts2TokeMinHeap)
-                if expToken in self.toke2Exp and self.toke2Exp[expToken]==expTime:
-                    del self.toke2Exp[expToken]
+        while self.toke2Exp:
+            first_item = next(iter(self.toke2Exp.items()))
+            if first_item[1]<=currentTime:
+                self.toke2Exp.popitem(last=False)
             else:
                 break
     def renew(self, tokenId: str, currentTime: int) -> None:
@@ -26,7 +25,7 @@ class AuthenticationManager:
         self.clearExp(currentTime)
         if tokenId in self.toke2Exp:
             self.toke2Exp[tokenId] = expT
-            heapq.heappush(self.ts2TokeMinHeap, [expT, tokenId])
+            self.toke2Exp.move_to_end(tokenId)
 
     def countUnexpiredTokens(self, currentTime: int) -> int:
         self.clearExp(currentTime)
