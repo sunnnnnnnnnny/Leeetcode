@@ -1,23 +1,27 @@
 class Solution:
     def findCheapestPrice(self, n: int, flights: List[List[int]], src: int, dst: int, k: int) -> int:
-        # bellman ford for k loops, run all edges
-        # time: O(k*E) space:O(n)
-        curDist = [math.inf]*n
-        curDist[src] = 0
-        preDist = [math.inf]*n
-        preDist[src] = 0
-        for _ in range(k+1):
-            for edge in flights:
-                s, d, p = edge
-                newcost = preDist[s]+p
-                curDist[d] = min(newcost, curDist[d])
-            # print(preDist)
-            # print(curDist)
-            preDist = copy.deepcopy(curDist)
-        
-        if preDist[dst]<math.inf:
-            return preDist[dst]
+        # diasktra with minHeap picking the next location
+        # no negative cost edge, time:O(N) space:O(M) M is size of the edge
+        edge = DefaultDict(dict)
+        for connect in flights:
+            fromA, toB, price = connect
+            edge[fromA][toB] = price
+        minHeap = []
+        heapq.heappush(minHeap, [0, 0, src])
+        costReach = {}
+        while minHeap:
+            nowCost, connectCnt, nowI = heapq.heappop(minHeap)
+            if nowI in costReach:
+                step, cost = costReach[nowI]
+                if connectCnt>step:
+                    continue
+                
+            costReach[nowI] = [connectCnt, nowCost]
+            if nowI == dst:
+                return nowCost
+            if connectCnt <= k:
+                for nextI, cost in edge[nowI].items():
+                    heapq.heappush(minHeap, [nowCost+cost, connectCnt+1, nextI])
         return -1
-
-
+                        
         
