@@ -1,45 +1,39 @@
 class MedianFinder:
-    # use 2 heap, min (for large num) & max (small) to record the add num
-    # always keep them len(max)-len(min)<=1
-    # so we can get the median at the top or the (min_top+max_top)/2
-
+# by separating the num into 2 data structs
+# large num in minHeap, small num in maxHeap, with both size same or small=large+1
+# everytime a new number comes in, we know which it shold be 
+# time:O(2*logN) for add O(1) for find mied
+# space:O(N)
     def __init__(self):
-        self.maxHeapForSmall = []
         self.smallSize = 0
-        self.minHeapForLarge = []
+        self.maxHeapSmall = []
         self.largeSize = 0
-        
-# time: O(logN/2) for each add
-# space: O(N)
+        self.minHeapLar = []
+
     def addNum(self, num: int) -> None:
-        if self.smallSize<self.largeSize:
-            # add to small
-            toSmall = num
-            if num > self.minHeapForLarge[0]:
-                toSmall = heapq.heappop(self.minHeapForLarge)
-                heapq.heappush(self.minHeapForLarge, num)
-            heapq.heappush(self.maxHeapForSmall, -toSmall)
-            self.smallSize += 1
-
+        
+        if self.smallSize >0 and -self.maxHeapSmall[0]>num:
+            heapq.heappush(self.maxHeapSmall, -num)
+        elif self.largeSize >0 and self.minHeapLar[0]<=num:
+            heapq.heappush(self.minHeapLar, num)
         else:
-            # add to large
-            toLarge = num
-            if self.largeSize>0 and num < -self.maxHeapForSmall[0]:
-                toLarge = -heapq.heappop(self.maxHeapForSmall)
-                heapq.heappush(self.maxHeapForSmall, -num)
-            heapq.heappush(self.minHeapForLarge, toLarge)
-            self.largeSize+=1
-
-# time: O(1) as we access the top item of both queue
-# space: O(1)
+            heapq.heappush(self.minHeapLar, num)
+        
+        if len(self.maxHeapSmall) > len(self.minHeapLar):
+            toLarge = heapq.heappop(self.maxHeapSmall)
+            heapq.heappush(self.minHeapLar, -toLarge)
+        elif len(self.maxHeapSmall) < len(self.minHeapLar)-1:
+            toSmall = heapq.heappop(self.minHeapLar)
+            heapq.heappush(self.maxHeapSmall, -toSmall)
+        self.smallSize = len(self.maxHeapSmall)
+        self.largeSize = len(self.minHeapLar)
     def findMedian(self) -> float:
-        if self.largeSize==0 and self.smallSize==0:
-            return 0
-        if self.largeSize>self.smallSize:
-            return self.minHeapForLarge[0]
+        med = 0
+        if self.smallSize == self.largeSize:
+            med = (-self.maxHeapSmall[0]+self.minHeapLar[0])/2
         else:
-            med = self.minHeapForLarge[0]-self.maxHeapForSmall[0]
-            return med/2
+            med = self.minHeapLar[0]
+        return med
         
 
 
