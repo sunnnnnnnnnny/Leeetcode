@@ -1,15 +1,14 @@
 class Solution:
     def minMeetingRooms(self, intervals: List[List[int]]) -> int:
-        # sort the room with end time of increasing 
-        # using the minHeap for end time, if the next end>minHeap head
-        # then we need one more room, 
-        # time:O(NlogN+NlogK) K is the size of room
-        # space:O(N)
+        # using minHeap to record the current in use meeting room end time
+        # always use the meeting room with first end time
+        # time:O(NlogN) space:O(N)
+        # sort the meetings with start time
         intervals.sort(key = lambda x:x[0])
-        meetEnd = []
+        meetR = []
         for meet in intervals:
-            iEnd = meet[1]
-            if len(meetEnd)>0 and meetEnd[0]<=meet[0]:
-                heapq.heappop(meetEnd)
-            heapq.heappush(meetEnd, iEnd)
-        return len(meetEnd)
+            s, e = meet
+            if meetR and meetR[0]<=s:
+                heapq.heappop(meetR)
+            heapq.heappush(meetR, e)
+        return len(meetR)
