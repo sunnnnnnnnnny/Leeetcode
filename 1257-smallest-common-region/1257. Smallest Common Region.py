@@ -1,9 +1,10 @@
 class Solution:
     def findSmallestRegion(self, regions: List[List[str]], region1: str, region2: str) -> str:
         # LCA where we can build a tree based on regions
-        # time:O(E+N) with buildig the tree and doing dfs
-        # space:O(N)
-        # record the indegree and connection
+        # Let m be the number of region arrays, and let n be the number of regions in each array.
+
+        # Time Complexity: O(m∗n)
+        # space:O(m∗n)
         node = {}
         for r in regions:
             parent = r[0]
