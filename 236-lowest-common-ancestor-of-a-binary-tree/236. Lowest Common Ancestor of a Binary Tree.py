@@ -7,34 +7,27 @@
 
 class Solution:
     def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
-        # get one of the path and record it, then checkthe nexy path
-        tarPath = set()
+        # using dfs to get the both target
+        # time:O(N) space:O(N)
         ret = None
-        def getNode(now, tar, nowPath):
-            nonlocal tarPath, ret
+        def dfs(now, pFound, qFound):
+            nonlocal q, p, ret
             if now == None:
-                return False
-            nowPath.append(now)
-            if now == tar:
-                if len(tarPath) == 0:
-                    tarPath = set(nowPath)
-                else:
-                    for i in range(len(nowPath)-1, -1, -1):
-                        n = nowPath[i]
-                        if n in tarPath:
-                            ret = n
-                            break
-                return True
-            found = getNode(now.left, tar, nowPath)
-            if found:
-                return found
-            found = getNode(now.right, tar, nowPath)
-            if found:
-                return found
-            nowPath.pop()
-            return found
-        pFound = getNode(root, p, [])
-        if not pFound:
-            return None
-        qFound = getNode(root, q, [])
+                return False, False
+            if pFound and qFound:
+                return pFound, qFound
+            leftp, leftq = dfs(now.left, pFound, qFound)
+            rightp, rightq = dfs(now.right, pFound, qFound)
+            pFound = leftp or rightp
+            qFound = leftq or rightq
+
+            if not pFound and now == p:
+                pFound = True
+            if not qFound and now == q:
+                qFound = True
+
+            if pFound and qFound and ret == None:
+                ret = now
+            return pFound, qFound
+        dfs(root, False, False)
         return ret
