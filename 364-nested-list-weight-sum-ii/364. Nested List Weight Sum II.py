@@ -43,26 +43,22 @@
 
 class Solution:
     def depthSumInverse(self, nestedList: List[NestedInteger]) -> int:
-        # can calculate the sum of all int, and also record the 
-        # minus parts, then getting the result as (maxDep+1)*sum-minus part
-        # bfs: time;O(N) space:O(1)
+        # aggregate the sum based on the depth, then count it all at the end
+        # time:O(N) space:O(N)
+        d2Sum = defaultdict(int)
         maxDep = 1
-        curDep = 1
-        totalSum = 0
-        deducted = 0
-        bfsQ = nestedList
-        while bfsQ:
-            levelSize = len(bfsQ)
-            for i in range(levelSize):
-                now = bfsQ.pop(0)
-                if now.isInteger():
-                    totalSum += now.getInteger()
-                    deducted += curDep*now.getInteger()
+        def getSumInNestIntlist(now, nowDep):
+            nonlocal d2Sum, maxDep
+            maxDep = max(maxDep, nowDep)
+            for i in range(len(now)):
+                if now[i].isInteger():
+                    d2Sum[nowDep]+=now[i].getInteger()
                 else:
-                    bfsQ.extend(now.getList())
-            curDep += 1
-        maxDep = curDep-1
-        # print(maxDep, totalSum, deducted)
-        posPart = (maxDep+1)*totalSum
-        ret = posPart - deducted
+                    getSumInNestIntlist(now[i].getList(), nowDep+1)
+        getSumInNestIntlist(nestedList, 1)
+        ret = 0
+        for i in range(1, maxDep+1):
+            ret += d2Sum[i]*(maxDep-i+1)
         return ret
+            
+        
