@@ -1,28 +1,25 @@
 class LRUCache:
 
     def __init__(self, capacity: int):
-        # record the capacity and the idx of the key to identifty the recent use 
-        # alwasy keep the least use in the front, with double linked list
-        # or OrderedDict
+        # use ordereddict so by updating the key it will be put in front
+        # always pop the last item 
+        # time:O(1) for push and get due to moving it to the front
+        # space:O(cap)
         self.cap = capacity
-        self.key2Val = collections.OrderedDict()
+        self.cache = OrderedDict()
 
     def get(self, key: int) -> int:
-        if key not in self.key2Val.keys():
-            return -1
-        self.key2Val.move_to_end(key)
-        return self.key2Val[key]
+        if key in self.cache:
+            self.cache.move_to_end(key)
+            return self.cache[key]
+        return -1
         
-
     def put(self, key: int, value: int) -> None:
-        if key in self.key2Val.keys():
-            self.key2Val.move_to_end(key)
-            self.key2Val[key] = value
-            return 
-        if len(self.key2Val) == self.cap:
-            self.key2Val.popitem(False)
-        self.key2Val[key] = value
-        
+        if key in self.cache:
+            self.cache.move_to_end(key)
+        self.cache[key] = value
+        if len(self.cache)>self.cap:
+            self.cache.popitem(last = False)
 
 
 # Your LRUCache object will be instantiated and called as such:
