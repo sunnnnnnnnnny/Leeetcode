@@ -6,31 +6,24 @@
 #         self.right = right
 class Solution:
     def closestKValues(self, root: Optional[TreeNode], target: float, k: int) -> List[int]:
-        # maxStack of size K to keep record of the dist, val
-        # or using the BST with pre-order then we can get the k
-        # time:O(N) space:O(N+K)
-        ret = []
-        def inOrder(now):
-            nonlocal target, ret,k
+        # pre-order traversal with list size k, as we reached k items 
+        # compare to remove the head or the tail
+        # time:O(N) space:O(N+N) = O(N)
+        kList = []
+        def preOrder(now):
+            nonlocal kList, target, k
             if now == None:
-                return
-            inOrder(now.left)
-            ret.append(now.val)
-            if len(ret)>k:
-                head = abs(ret[0]-target)
-                last = abs(ret[-1]-target)
-                # print(now.val, maxDist, val)
-                # if the last distance is further than the first, then any of the is going to be bigger
-                # thus we can skip it
-                if last>head:
-                    ret.pop()
-                    return
-                else:
-                    ret.pop(0)
-            inOrder(now.right)
-        inOrder(root)
-        # ans = []
-        # while ret:
-        #     dist, num = heapq.heappop(ret)
-        #     ans.append(num)
-        return ret
+                return 
+            preOrder(now.left)
+            kList.append(now.val)
+            preOrder(now.right)
+        preOrder(root)
+        while len(kList) > k:
+            headDiff = abs(kList[0]-target)
+            tailDiff = abs(kList[-1]-target)
+            # print(kList[0], kList[-1], headDiff, tailDiff)
+            if headDiff>tailDiff:
+                kList.pop(0)
+            else:
+                kList.pop()
+        return kList
