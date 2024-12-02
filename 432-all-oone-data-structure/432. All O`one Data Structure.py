@@ -2,88 +2,91 @@ class LinkN:
     def __init__(self, cnt):
         self.cnt = cnt
         self.val = set()
-        self.prev = None
-        self.next = None
+        self.preN = None
+        self.nextN = None
 class AllOne:
-# record the key to count and count to key, also keep update the max and min
-# time:O(1) for each space:O(N+B) N is the unique keys, B is unique cnt
+# time:O(1) space:O(N+bucket)
     def __init__(self):
-        self.key2Buck = {}
-        self.begin = LinkN(0)
-        self.end = LinkN(0)
-        self.begin.next = self.end
-        self.end.prev = self.begin
+        self.head = LinkN(0)
+        self.tail = LinkN(0)
+        self.head.nextN = self.tail
+        self.tail.preN = self.head
+        self.v2Buk = {}
 
     def inc(self, key: str) -> None:
-        oriCnt = 0
-        buckN = self.begin
-        if key in self.key2Buck.keys():
-            buckN = self.key2Buck[key]
-            oriCnt = buckN.cnt
-        # print('inc ', key, oriCnt, buckN.cnt, buckN.val)
-        if buckN.next:
-            if buckN.next.cnt != oriCnt+1:
-                newBuck = LinkN(oriCnt+1)
-                newBuck.val.add(key)
-                newBuck.prev = buckN
-                newBuck.next = buckN.next
-                buckN.next.prev = newBuck
-                buckN.next = newBuck
-                self.key2Buck[key] = newBuck
-            else:
-                buckN.next.val.add(key)
-                self.key2Buck[key] = buckN.next
-        if key in buckN.val:
-            buckN.val.remove(key)
-            if buckN.cnt>0 and len(buckN.val) == 0:
-                buckN.prev.next = buckN.next
-                buckN.next.prev = buckN.prev
-        
+        # print("start inc")
+        buk = self.head
+        newCnt = 1
+        if key in self.v2Buk:
+            buk = self.v2Buk[key]
+            buk.val.remove(key)
+            newCnt = buk.cnt+1
+            # print("ince", key, newCnt)
+            
+            if len(buk.val) == 0:
+                temp = buk.preN
+                buk.preN.nextN = buk.nextN
+                buk.nextN.preN = buk.preN
+                buk = temp
+        # print(key, newCnt)
+        if buk.nextN.cnt == newCnt:
+            buk.nextN.val.add(key)
+            self.v2Buk[key] = buk.nextN
+        else:
+            # print("inc:", key, newCnt)
+            newBuk = LinkN(newCnt)
+            buk.nextN.preN = newBuk
+            newBuk.nextN  = buk.nextN
+            buk.nextN = newBuk
+            newBuk.preN = buk
+            newBuk.val.add(key)
+            self.v2Buk[key] = newBuk
+        nowBuk = self.v2Buk[key]
+        # if nowBuk.preN !=None:
+        #     print(nowBuk.preN.cnt)
+        # if nowBuk.nextN !=None:
+        #     print(nowBuk.nextN.cnt)
+        # print("finish inc")
+
+
     def dec(self, key: str) -> None:
-        oriCnt = 0
-        buckN = self.end
-        if key in self.key2Buck.keys():
-            buckN = self.key2Buck[key]
-            oriCnt = buckN.cnt
-        if buckN.prev:
-            if buckN.prev.cnt != oriCnt-1:
-                newBuck = LinkN(oriCnt-1)
-                newBuck.val.add(key)
-                newBuck.prev = buckN.prev
-                newBuck.next = buckN
-                buckN.prev.next = newBuck
-                buckN.prev = newBuck
-                self.key2Buck[key] = newBuck
-            else:
-                if oriCnt-1>0:
-                    buckN.prev.val.add(key)
-                    self.key2Buck[key] = buckN.prev
-                else:
-                    del self.key2Buck[key]
-        if key in buckN.val:
-            buckN.val.remove(key)
-            if buckN.cnt>0 and len(buckN.val) == 0:
-                buckN.prev.next = buckN.next
-                buckN.next.prev = buckN.prev
+        if key not in self.v2Buk:
+            return
+        buk = self.v2Buk[key]
+        newCnt = buk.cnt-1
+        buk.val.remove(key)
+        if len(buk.val) == 0:
+            temp = buk.nextN
+            buk.preN.nextN = buk.nextN
+            buk.nextN.preN = buk.preN
+            buk = temp
+        if newCnt == 0:
+            del self.v2Buk[key]
+            return
+        if buk.preN.cnt == newCnt:
+            buk.preN.val.add(key)
+            self.v2Buk[key] = buk.preN
+        else:
+            newBuk = LinkN(newCnt)
+            buk.preN.nextN = newBuk
+            newBuk.preN  = buk.preN
+            buk.preN = newBuk
+            newBuk.nextN = buk
+            newBuk.val.add(key)
+            self.v2Buk[key] = newBuk
 
     def getMaxKey(self) -> str:
-        if self.end.prev == self.begin:
-            return ""
-        maxBuck = self.end.prev
-        ret =""
-        for a in maxBuck.val:
-            ret = a
-            break
-        return ret
+        ket = self.tail.preN.val
+        for i in ket:
+            return i
+        return ""
+
     def getMinKey(self) -> str:
-        if self.begin.next == self.end:
-            return ""
-        minBuck = self.begin.next
-        ret =""
-        for a in minBuck.val:
-            ret = a
-            break
-        return ret
+        ket = self.head.nextN.val
+        for i in ket:
+            return i
+        return ""
+        
 
 
 # Your AllOne object will be instantiated and called as such:
