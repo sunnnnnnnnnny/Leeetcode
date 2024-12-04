@@ -3,35 +3,27 @@
 # def knows(a: int, b: int) -> bool:
 
 class Solution:
+
     def findCelebrity(self, n: int) -> int:
-        # if knowing someone, then it's not the candidate
-        # get the only candidate, and exam it
-        # time:O(N) space:O(1)
-        def isCele(cand,n):
-            for i in range(n):
-                if i!=cand:
-                    if knows(cand, i) or not knows(i, cand):
-                        return False
-            return True
-        cand = 0
-        for i in range(1, n):
-            if knows(cand, i):
-                cand = i
-        if isCele(cand,n):
-            return cand
-        return -1
-        # count the incoming edges, ask knows all the other people 
-        # record the out going and incoming edge
-        # time:O(N^2) space:O(2N)
-        # inE = [0]*n
-        # outE = [0]*n
-        # for i in range(n):
-        #     for j in range(n):
-        #         if i!=j:
-        #             if knows(i,j):
-        #                 outE[i] += 1
-        #                 inE[j] += 1
-        # for i in range(n):
-        #     if outE[i] == 0 and inE[i] == n-1:
-        #         return i
-        # return -1
+        # check from the lowest index to find if it knows any of the others
+        # if x knows y, we will start from y as the next candidate
+        # while the people in between x to y knows x, so they are not potential celeb
+        # time:O(N+N) = O(N)
+        # space:O(1)
+        # to save the call to knows using cache, space:O(N)
+        nowCand = 0
+        cache = {}
+        def cacheKnows(x, y):
+            nonlocal cache
+            if (x,y) not in cache:
+                cache[(x,y)] = knows(x,y) 
+            return cache[(x,y)]
+        for i in range(1,n):
+            if cacheKnows(nowCand, i):
+                nowCand = i
+        # double confirm the candidate doesn't know all the others, and every knows it
+        for i in range(n):
+            if nowCand != i:
+                if cacheKnows(nowCand, i) or not cacheKnows(i, nowCand):
+                    return -1
+        return nowCand
