@@ -1,34 +1,32 @@
 class Solution:
     def maxDistance(self, position: List[int], m: int) -> int:
-        # similar to koko banana, use binary search for the space
-        # range from 1 to lastPos-firstPos//m
-        # where Y = lastPos-firstPos//m
-        # sorting and checking the fit take O(N) with binary search logY
-        # sorting takes the space of O(N) in python
-        # time:O(NlogY+NlogN)=O(NlogY*N) space:O(N)
+        n = len(position)
         position.sort()
-        def canFit(dist):
-            nonlocal position, m
-            prePos = position[0]
-            leftBall = m-1
-            for i in range(1, len(position)):
-                if position[i]>=prePos+dist:
-                    prePos = position[i]
-                    leftBall -= 1
-                if leftBall==0:
-                    break
-            return True if leftBall==0 else False
-        left = 1
-        right = (position[-1]-position[0])//(m-1)
-        print(left, right)
-        while left<=right:
-            mid = (left+right)//2
-            isFit = canFit(mid)
-            if isFit:
-                left = mid+1
+        def canPlaceBall(dist):
+            nonlocal position, n, m
+            prev = position[0]
+            left = m-1
+            for i in range(1,n):
+                if position[i]-prev>=dist:
+                    left-=1
+                    prev = position[i]
+                if left == 0:
+                    return True
+            return False
+        if m==2:
+            return position[n-1]-position[0]
+        # longDist = (position[n-1]-position[0])//(m)+1
+        longDist = (position[n-1])//(m-1)+1
+        l = 0
+        r = longDist
+        # print(l,r)
+        ret = 0
+        while l<=r:
+            mid = (l+r)//2
+            if canPlaceBall(mid):
+                ret = mid
+                l = mid+1
             else:
-                right = mid-1
-        # rightFit = canFit(right)
-        # print(right, rightFit)
-        
-        return right
+                r = mid-1
+        return ret
+
