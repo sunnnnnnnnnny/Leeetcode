@@ -2,9 +2,10 @@ class Solution:
     def vowelStrings(self, words: List[str], queries: List[List[int]]) -> List[int]:
         # precalculate the counts and using the range to directly deducute
         # time:O(N+M) n is words, m is query
+        # space:O(N)
         vowelCnt = 0
         def isSEvow(w):
-            if w[0] in set(["a",'e','i','o','u']) and w[-1] in set(["a",'e','i','o','u']):
+            if w[0] in set('aeiou') and w[-1] in set('aeiou'):
                 return True
             return False
         n = len(words)
