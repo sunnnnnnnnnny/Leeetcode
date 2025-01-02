@@ -1,18 +1,15 @@
 class Solution:
     def coinChange(self, coins: List[int], amount: int) -> int:
-        # dp[i] = min of all coins (dp[c]+1)
-        # time:O(amount*coins)
-        dp = [-1 for i in range(amount+1)]
-        dp[0] = 0
-        for c in coins:
-            if c < amount+1:
-                dp[c] = 1
+        # dp
+        coins.sort()
+        cnt = [-1]*(amount+1)
+        cnt[0] = 0
         for i in range(1, amount+1):
-            if dp[i] == -1:
-                continue
+            minWay = -1
             for c in coins:
-                nextC = i+c
-                if nextC<amount+1:
-                    dp[nextC] = dp[i]+1 if dp[nextC]<0 else min(dp[nextC],dp[i]+1)
-        
-        return dp[amount]
+                left = i-c
+                if left>=0 and cnt[left]>=0:
+                    nowWay = cnt[left]+1
+                    minWay = min(minWay, nowWay) if minWay>0 else nowWay
+            cnt[i] = minWay
+        return cnt[amount]
